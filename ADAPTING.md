@@ -1,17 +1,17 @@
-# Adapting an existing solution to Cloud Events
+# Adapting an existing solution to Bifröst
 
 `EXTENDING.md` covers building a message type from nothing. This covers the more common
 case: you already have a working extension, and you want some of its existing procedures
-callable through Cloud Events **without rewriting them**.
+callable through Bifröst **without rewriting them**.
 
-The worked example is `Legacy App` + `Legacy App - Cloud Events` in this repo. `Legacy App`
-is written as if Cloud Events didn't exist - two procedures, two different shapes on
-purpose. `Legacy App - Cloud Events` depends on it and wraps both. Read them in that order;
+The worked example is `Legacy App` + `Legacy App - Bifrost` in this repo. `Legacy App`
+is written as if Bifröst didn't exist - two procedures, two different shapes on
+purpose. `Legacy App - Bifrost` depends on it and wraps both. Read them in that order;
 this document explains the *why* behind what you'll see.
 
 ## The two apps, and why there are two
 
-`Legacy App - Cloud Events` depends on `Legacy App`, not the other way around, and it never
+`Legacy App - Bifrost` depends on `Legacy App`, not the other way around, and it never
 modifies `Legacy App`'s objects directly. That split matters for a real retrofit: you often
 don't own, can't touch, or don't want to touch the original extension's release cycle
 (someone else's module, a customer's, a different team's). Keeping the adapter as a
@@ -24,7 +24,7 @@ Verified against two real, shipped Origo extensions (Arionbanki: 30+ message typ
 Accounts, Bills, Claims, Payments, Statement; DocEx's full message-type set) - **neither
 uses a separate adapter app.** Both add a `src/MessageTypes/<Domain>/` folder *inside* the
 same app: one codeunit per message type, one shared enum extension, no new app at all. That
-works because Origo owns both the original solution and the Cloud Events layer, so there's
+works because Origo owns both the original solution and the Bifröst layer, so there's
 no reason to keep them apart.
 
 | You... | Structure |
@@ -40,7 +40,7 @@ adapter code lives*, not about what it has to do.
 
 `Legacy Stock Mgt.ReserveStock` has no dialogs and no intermediate `Commit()` - the whole
 operation is one transaction, and it can't leave anything half-done. `Legacy Stock Reserve
-Impl.ExecuteCloudEventTask` calls it directly: parse the JSON, call the procedure, write the
+Impl.ExecuteBifrostTask` calls it directly: parse the JSON, call the procedure, write the
 JSON response. No change to `Legacy App` was needed. **This is the case people assume is the
 only case** - it's why a "just wrap it" mental model survives until it hits case 2.
 
@@ -60,7 +60,7 @@ The original `CancelReservation` has two problems that a thin wrapper cannot pap
    mask the fact that the first attempt half-completed.
 
 **You cannot fix either problem from the adapter app.** Both are inside `Legacy App`'s own
-procedure. The fix, in the second commit that added `Legacy App - Cloud Events`, was one
+procedure. The fix, in the second commit that added `Legacy App - Bifrost`, was one
 targeted extraction:
 
 - `CancelReservationSilent(ItemNo)` — the same two writes, no `Confirm()`, no `Commit()`

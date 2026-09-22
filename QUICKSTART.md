@@ -6,8 +6,8 @@ order, ending with a real call and a real response.
 ## 1. Clone and rename
 
 ```bash
-git clone https://github.com/businesscentralal/origo-bc-cloudevents-reference
-cd origo-bc-cloudevents-reference/"Origo Cloud Events Reference"
+git clone https://github.com/businesscentralal/bifrost-reference
+cd bifrost-reference/"Bifrost Reference"
 ```
 
 Pick a name for your extension and your object prefix. Rename the folder, `app.json`'s
@@ -22,7 +22,7 @@ set up locally, or just VS Code with the AL extension and symbols downloaded for
 Events Core, compile now. Fixing a problem you introduced is much easier than debugging one
 you inherited.
 
-## 3. Write your `ExecuteCloudEventTask`, using the closest existing example
+## 3. Write your `ExecuteBifrostTask`, using the closest existing example
 
 - Read-only, no failure path needed beyond "not found"? Start from `RefTableGetImpl`.
 - A write? Start from `RefNoteAddImpl` + `RefNoteAddProcess` - copy the isolation pattern,
@@ -47,7 +47,7 @@ curl -X POST "https://<env>/api/origo/cloudEvent/v1.0/tasks" \
   -H "Content-Type: application/json" \
   -d '{
     "specversion": "1.0",
-    "type": "Reference.Echo.Set",
+    "type": "Reference.Echo.Get",
     "source": "quickstart",
     "subject": "quickstart-1",
     "datacontenttype": "application/json",
@@ -68,8 +68,8 @@ directly" section.
 contract):
 
 ```al
-Dispatcher.Execute(Enum::"Cloud Event Message Type ori"::"Reference.Echo.Set",
-    Enum::"CE Message Version ori"::"1.0", '', '', 'application/json',
+Dispatcher.Execute(Enum::"Message Type ori"::"Reference.Echo.Get",
+    Enum::"Message Version ori"::"1.0", '', '', 'application/json',
     RequestContent, ResponseContent, ResponseContentType);
 ```
 

@@ -1,8 +1,8 @@
-namespace Origo.CloudEvents.Reference.Legacy;
+namespace Origo.Bifrost.Reference.Legacy;
 
 /// <summary>
 /// A stock reservation, exactly as an ordinary extension would model it. Nothing here
-/// anticipates Cloud Events - that's the point.
+/// anticipates Bifröst - that's the point.
 /// </summary>
 table 90050 "Legacy Stock Reservation"
 {

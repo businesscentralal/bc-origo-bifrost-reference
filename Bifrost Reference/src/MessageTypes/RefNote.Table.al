@@ -1,4 +1,4 @@
-namespace Origo.CloudEvents.Reference;
+namespace Origo.Bifrost.Reference;
 
 /// <summary>
 /// Minimal demo table used only by Reference.Note.Add, to keep the write-pattern example

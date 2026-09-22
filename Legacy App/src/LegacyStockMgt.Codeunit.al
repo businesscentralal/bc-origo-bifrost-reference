@@ -1,7 +1,7 @@
-namespace Origo.CloudEvents.Reference.Legacy;
+namespace Origo.Bifrost.Reference.Legacy;
 
 /// <summary>
-/// Ordinary business logic, written with no awareness of Cloud Events. Two procedures,
+/// Ordinary business logic, written with no awareness of Bifröst. Two procedures,
 /// two different shapes on purpose:
 ///  - ReserveStock: a plain function. No UI, no Commit(). Trivially wrappable.
 ///  - CancelReservation: interactive (Confirm) and transactionally unsafe (an early
@@ -12,7 +12,7 @@ codeunit 90050 "Legacy Stock Mgt"
 {
     /// <summary>
     /// Reserves quantity against an item. No dialogs, no intermediate commit - the whole
-    /// operation is one transaction. This is the "easy" case for a Cloud Events wrapper.
+    /// operation is one transaction. This is the "easy" case for a Bifröst wrapper.
     /// </summary>
     procedure ReserveStock(ItemNo: Code[20]; Quantity: Decimal): Boolean
     var
@@ -51,7 +51,7 @@ codeunit 90050 "Legacy Stock Mgt"
     /// <summary>
     /// The retrofit: the same two writes as before (delete the reservation, log the
     /// cancellation), but as one procedure with no Confirm() and no Commit() in between -
-    /// both writes now succeed or fail together. This is what "Legacy App - Cloud Events"
+    /// both writes now succeed or fail together. This is what "Legacy App - Bifrost"
     /// calls; CancelReservation above still exists for existing UI callers. See
     /// ADAPTING.md for why this extraction was necessary rather than optional.
     /// </summary>

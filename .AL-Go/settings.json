@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v9.0/.Modules/settings.schema.json",
   "country": "w1",
-  "appFolders": ["Origo Cloud Events Reference", "Legacy App", "Legacy App - Cloud Events"],
+  "appFolders": ["Bifrost Reference", "Legacy App", "Legacy App - Bifrost"],
   "testFolders": [],
   "bcptTestFolders": [],
   "appDependencyProbingPaths": [
     {
-      "repo": "https://github.com/OrigoSoftwareSolutions/bc-cloudevents",
+      "repo": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core",
       "release_status": "latestBuild",
       "version": "latest",
       "projects": "*",

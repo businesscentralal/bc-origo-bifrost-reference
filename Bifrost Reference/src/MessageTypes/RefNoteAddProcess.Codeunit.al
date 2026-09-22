@@ -1,16 +1,16 @@
-namespace Origo.CloudEvents.Reference;
+namespace Origo.Bifrost.Reference;
 
-using Origo.APP.CloudEvents;
+using Origo.Bifrost;
 
 /// <summary>
-/// Isolated write codeunit for Reference.Note.Add. TableNo = "CE Message Argument ori" is
+/// Isolated write codeunit for Reference.Note.Add. TableNo = "Message Argument ori" is
 /// required so Codeunit.Run() can catch any Error() raised here and report it through
 /// Argument.RespondWithLastError() in the calling impl codeunit.
 /// </summary>
 codeunit 90004 "Ref Note Add Process"
 {
     Access = Internal;
-    TableNo = "CE Message Argument ori";
+    TableNo = "Message Argument ori";
 
     trigger OnRun()
     var

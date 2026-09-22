@@ -1,17 +1,17 @@
-# Calling Cloud Events without extending it
+# Calling Bifröst without extending it
 
-For an external system, host builder, or MCP server that wants to **call** Cloud Events —
+For an external system, host builder, or MCP server that wants to **call** Bifröst —
 not add a message type in AL. If you're extending, see `EXTENDING.md` instead; the two are
 different contracts with different audiences.
 
 ## The four endpoints
 
-All requests go through one table (`Cloud Event Message`), exposed as four OData pages:
+All requests go through one table (`Message ori`), exposed as four OData pages:
 
 | Page | Entity set | Direction | Use it for |
 |---|---|---|---|
-| `Cloud Event Queue API` | `queues` | POST — enqueue only | Volume, long-running work, fire-and-forget |
-| `Cloud Event Task API` | `tasks` | POST — enqueue **and** process | Interactive calls where you're waiting on the result |
+| `Bifröst Queue API` | `queues` | POST — enqueue only | Volume, long-running work, fire-and-forget |
+| `Bifröst Task API` | `tasks` | POST — enqueue **and** process | Interactive calls where you're waiting on the result |
 | `CE Request Data API` | `requests` | GET — read-only | Reading back what you sent |
 | `CE Response Data API` | `responses` | GET — read-only | Reading the result |
 
@@ -41,7 +41,7 @@ the link it returns from `responses`. Budget for that round trip.
 ```
 
 - `type` is the exact dotted enum name registered by whatever extension implements it — this
-  repo's three examples are `Reference.Echo.Set`, `Reference.Table.Get`, `Reference.Note.Add`.
+  repo's three examples are `Reference.Echo.Get`, `Reference.Table.Get`, `Reference.Note.Add`.
 - **`data` is an escaped JSON *string*, not a nested object.** Sending `"data": { ... }` instead
   of `"data": "{...}"` is the single most common first-call mistake.
 - `subject` is optional on `queues` but **required** on `tasks`. A payload that works against
@@ -61,10 +61,10 @@ Two failure shapes, both JSON, both carrying a `hint` field:
 { "status": "Error", "error": "Table 'Foo' was not found.", "hint": "..." }
 ```
 
-- **Expected failures** (bad input, not found) come from the implementation calling
-  `RespondWithError` deliberately.
-- **Unexpected failures** come from `RespondWithLastError`, which also includes the AL call
-  stack.
+- **Expected failures** (bad input, not found, business rule) carry the exact `error` text
+  listed in that message type's help document — match on it.
+- **Unexpected failures** carry the underlying Business Central error text, and also include
+  a call stack for the implementer.
 
 **A response with no `status` field at all counts as success.** Don't treat a missing
 `status` as a failure — that's the actual contract, not an omission.
@@ -78,6 +78,6 @@ you can query at runtime, not just read in source.
 
 | Type | Request | What it teaches |
 |---|---|---|
-| `Reference.Echo.Set` | `{ "message": "hi" }` | The envelope round trip, nothing else |
-| `Reference.Table.Get` | `{ "tableName": "Customer" }` | A real lookup, with the `RespondWithError` failure path (send a table name that doesn't exist) |
-| `Reference.Note.Add` | `{ "no": "NOTE-1", "text": "hello" }` | A write, with the `RespondWithLastError` failure path (send the same `no` twice) |
+| `Reference.Echo.Get` | `{ "message": "hi" }` | The envelope round trip, nothing else |
+| `Reference.Table.Get` | `{ "tableName": "Customer" }` | A real lookup, with an expected-failure path (send a table name that doesn't exist) |
+| `Reference.Note.Add` | `{ "no": "NOTE-1", "text": "hello" }` | A write, with a failure path raised by the write itself (send the same `no` twice) |

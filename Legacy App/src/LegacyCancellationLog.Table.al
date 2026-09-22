@@ -1,4 +1,4 @@
-namespace Origo.CloudEvents.Reference.Legacy;
+namespace Origo.Bifrost.Reference.Legacy;
 
 /// <summary>
 /// Records that a reservation was cancelled. Kept deliberately separate from the
